@@ -1,5 +1,15 @@
 // Wordle Remake
 
+// Words List
+import { words } from "./words.js";
+
+// Global Variables
+let numberOfGuesses = 6;
+let guessesRemaining = numberOfGuesses;
+let currentGuess = [];
+let nextLetter = 0;
+let correctGuessString = words[Math.floor(Math.random()*words.length)];
+
 // Function to create the board
 function createBoard() {
     let board = document.getElementById("game-board");
