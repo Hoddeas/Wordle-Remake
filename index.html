@@ -8,6 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Wordle Remake</title>
 
+        <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
         <link rel="stylesheet" href="style.css" />
         
     </head>
@@ -17,13 +18,13 @@
         <h1 class="title">Wordle Remake</h1>
         <hr>
 
-        <div id="game-board">
+        <div id="gameboard">
 
         </div>
 
         <div id="keyboard">
 
-            <div class="first-row">
+            <div class="keyboard-row" id="first-row">
 
                 <button class="keyboard-button">q</button>
                 <button class="keyboard-button">w</button>
@@ -38,7 +39,7 @@
 
             </div>
 
-            <div class="second-row">
+            <div class="keyboard-row" id="second-row">
 
                 <div id="spacer"></div>
                 <button class="keyboard-button">a</button>
@@ -54,9 +55,9 @@
 
             </div>
 
-            <div class="third-row">
+            <div class="keyboard-row" id="third-row">
 
-                <button class="keyboard-button">Enter</button>
+                <button class="keyboard-button" id="enter-button">Enter</button>
                 <button class="keyboard-button">z</button>
                 <button class="keyboard-button">x</button>
                 <button class="keyboard-button">c</button>

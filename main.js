@@ -12,21 +12,21 @@ let correctGuessString = words[Math.floor(Math.random()*words.length)];
 
 // Function to create the board
 function createBoard() {
-    let board = document.getElementById("game-board");
+    let gameboard = document.getElementById("gameboard");
     
     // Loop to create 6 rows
     for (let i = 0; i < 6; i++) {
-        let row = document.createElement("div");
-        row.className = "row";
+        let gameboardRow = document.createElement("div");
+        gameboardRow.className = "gameboard-row";
         
         // Loop to create 5 boxes for each row
         for (let j = 0; j < 5; j++) {
-            let box = document.createElement("div");
-            box.className = "box";
-            row.appendChild(box);
+            let gameboardBox = document.createElement("div");
+            gameboardBox.className = "gameboard-box";
+            gameboardRow.appendChild(gameboardBox);
         }
 
-        board.appendChild(row);
+        gameboard.appendChild(gameboardRow);
     }
 }
 
