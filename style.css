@@ -41,7 +41,6 @@ hr {
 
 
 #keyboard {
-  margin: 0px 10px 8px 0;
   height: 200px;
   align-items: center;
 }
@@ -75,8 +74,13 @@ hr {
   align-items: center;
 }
 
+.keyboard-button:last-of-type {
+  margin: 0;
+}
+
 #enter-button,
 #delete-button {
   flex: 1.5;
   font-size: 12px;
 }
+

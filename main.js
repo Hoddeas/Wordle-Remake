@@ -32,3 +32,8 @@ function createBoard() {
 
 createBoard();
 
+
+// Function to listen for keys pressed
+document.addEventListener("keydown", function(key) { 
+    console.log(String(key.key))
+});
