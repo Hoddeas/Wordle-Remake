@@ -7,7 +7,7 @@ import { words } from "./words.js";
 let numberOfGuesses = 6;
 let guessesRemaining = numberOfGuesses;
 let currentGuess = [];
-let nextLetter = 0;
+let letterPosition = 0;
 let correctGuessString = words[Math.floor(Math.random()*words.length)];
 
 // Function to create the board
@@ -33,7 +33,44 @@ function createBoard() {
 createBoard();
 
 
-// Function to listen for keys pressed
-document.addEventListener("keydown", function(key) { 
-    console.log(String(key.key))
+// Function to check key pressed and print key onto board
+document.addEventListener("keydown", function(inputKey) { 
+    
+    let pressedKey = String(inputKey.key);
+
+    let keyFound = pressedKey.match(/[a-z]/gi);
+
+    if (guessesRemaining === 0) {
+        return;
+    };
+
+    if (pressedKey === "Backspace" && letterPosition !== 0) {
+        deleteLetter();
+    };
+    
+    if (pressedKey === "Enter") {
+        checkGuess();
+    };
+
+    if (!keyFound === true || keyFound.length > 1) {
+        return;
+    } else {
+        insertLetter(pressedKey);
+    };
+
 });
+
+// Letter Functions
+
+// Insert a letter
+function insertLetter(pressedKey) {
+
+    pressedKey = pressedKey.toLowercase();
+
+    if (letterPosition === 5) {
+        return;
+    };
+
+    if ()
+
+}
