@@ -33,16 +33,13 @@ function createBoard() {
 createBoard();
 
 
-// Function to check key pressed and print key onto board
+// Function to check key pressed
 document.addEventListener("keydown", function(inputKey) { 
-    
-    let pressedKey = String(inputKey.key);
-
-    let keyFound = pressedKey.match(/[a-z]/gi);
-
     if (guessesRemaining === 0) {
         return;
     };
+
+    let pressedKey = String(inputKey.key);
 
     if (pressedKey === "Backspace" && letterPosition !== 0) {
         deleteLetter();
@@ -52,25 +49,53 @@ document.addEventListener("keydown", function(inputKey) {
         checkGuess();
     };
 
+    let keyFound = pressedKey.match(/[a-z]/gi);
+
     if (!keyFound === true || keyFound.length > 1) {
         return;
     } else {
         insertLetter(pressedKey);
     };
-
 });
 
 // Letter Functions
 
 // Insert a letter
 function insertLetter(pressedKey) {
-
-    pressedKey = pressedKey.toLowercase();
-
     if (letterPosition === 5) {
         return;
     };
 
-    if ()
+    pressedKey = pressedKey.toLowerCase();
 
-}
+    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let box = row.children[letterPosition];
+    box.textContent = pressedKey;
+    box.classList.add("filled-box");
+    currentGuess.push(pressedKey);
+    letterPosition += 1;
+};
+
+// Delete a letter
+function deleteLetter() {
+    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let box = row.children[letterPosition - 1];
+    box.textContent = "";
+    box.classList.remove("filled-box");
+    currentGuess.pop();
+    letterPosition -= 1;
+};
+
+/* 
+Convert currentGuess array to a string
+*/
+function checkGuess() {
+    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let guessString = "";
+    let rightGuess = Array.from(correctGuessString);
+
+    for (const eachLetter of currentGuess) {
+        guessString += eachLetter;
+    };
+
+};
