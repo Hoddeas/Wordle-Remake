@@ -1,5 +1,11 @@
 // Wordle Remake
 
+// Toastr Notification Settings
+toastr.options = {
+    positionClass: "toast-top-center",
+    timeOut: 500
+};
+
 // Words List
 import { words } from "./words.js";
 
@@ -88,14 +94,47 @@ function deleteLetter() {
 
 /* 
 Convert currentGuess array to a string
+Check if the guess is 5 words
+Check if word is in word list (if it is not in word list, flip returned false to true so if function can run)
 */
 function checkGuess() {
     let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
     let guessString = "";
-    let rightGuess = Array.from(correctGuessString);
+    let correctGuess = Array.from(correctGuessString);
 
     for (const eachLetter of currentGuess) {
         guessString += eachLetter;
     };
 
+    if (guessString.length != 5) {
+        toastr.warning("Not enough letters");
+        return;
+    }
+
+    if (!words.includes(guessString)) {
+        toastr.warning("Not in word list");
+        return;
+    }
+
+    for (i = 0; i < correctGuess.length; i++) {
+        let box = row.children[i];
+        let letter = currentGuess[i];
+
+        let letterPosition = correctGuess.indexOf(currentGuess[i]);
+
+        // If letter is not found
+        if (letterPosition === -1) {
+            boxColor(grey, i);
+        }
+    }
+
+};
+
+// Function to change box color
+function boxColor(color, position) {
+    let boxColor = color;
+    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let box = row.children[position];
+
+    box.classList.add(`${boxColor}`);
 };
