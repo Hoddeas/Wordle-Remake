@@ -35,19 +35,19 @@ hr {
   border: 2px solid #878a8c;
 }
 
-.grey-box {
+.gameboard-box[data-boxcolor="grey-box"] {
   background-color: #787c7e;
   border: 2px solid #787c7e;
   color: white;
 }
 
-.yellow-box {
+.gameboard-box[data-boxcolor="yellow-box"] {
   background-color: #c9b458;
   border: 2px solid #c9b458;
   color: white;
 }
 
-.green-box {
+.gameboard-box[data-boxcolor="green-box"] {
   background-color: #6aaa64;
   border: 2px solid #6aaa64;
   color: white;

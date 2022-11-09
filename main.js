@@ -7,37 +7,14 @@ toastr.options = {
 };
 
 // Words List
-import { words } from "./words.js";
+import { wordlist } from "./words.js";
 
 // Global Variables
 let numberOfGuesses = 6;
 let guessesRemaining = numberOfGuesses;
-let currentGuess = [];
+let currentGuessArray = [];
 let letterPosition = 0;
-let correctGuessString = words[Math.floor(Math.random()*words.length)];
-
-// Function to create the board
-function createBoard() {
-    let gameboard = document.getElementById("gameboard");
-    
-    // Loop to create 6 rows
-    for (let i = 0; i < 6; i++) {
-        let gameboardRow = document.createElement("div");
-        gameboardRow.className = "gameboard-row";
-        
-        // Loop to create 5 boxes for each row
-        for (let j = 0; j < 5; j++) {
-            let gameboardBox = document.createElement("div");
-            gameboardBox.className = "gameboard-box";
-            gameboardRow.appendChild(gameboardBox);
-        }
-
-        gameboard.appendChild(gameboardRow);
-    }
-}
-
-createBoard();
-
+let correctGuessString = wordlist[Math.floor(Math.random() * wordlist.length)];
 
 // Function to check key pressed
 document.addEventListener("keydown", function(inputKey) { 
@@ -64,6 +41,70 @@ document.addEventListener("keydown", function(inputKey) {
     };
 });
 
+
+
+/* 
+Convert currentGuess array to a string
+Check if the guess is 5 words
+Check if word is in word list (if it is not in word list, flip returned false to true so if function can run)
+*/
+function checkGuess() {
+
+    console.log(correctGuessString);  
+    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let currentGuessString = "";
+    let correctGuessArray = Array.from(correctGuessString);
+
+    for (const eachLetter of currentGuessArray) {
+        currentGuessString += eachLetter;
+    };
+
+    if (currentGuessString.length != 5) {
+        toastr.warning("Not enough letters");
+        return;
+    }
+
+    if (!wordlist.includes(currentGuessString)) {
+        toastr.warning("Not in word list");
+        return;
+    }
+
+    for (let i = 0; i < correctGuessArray.length; i++) {
+        let box = row.children[i];
+        let letter = currentGuessArray[i];
+
+        let letterPosition = correctGuessArray.indexOf(currentGuessArray[i]);
+
+        // If letter is not found
+        if (letterPosition === -1) {
+            addBoxColor("grey", i);
+
+        // If letter is found and is in the right place
+        } else if (currentGuessArray[i] === correctGuessArray[i]) {
+            addBoxColor("green", i);
+
+        // If letter is found but not in the right place
+        } else {
+            addBoxColor("yellow", i);
+        };
+    };
+    
+    if (currentGuessString === correctGuessString) {
+        toastr.success("You Win!");
+        return;
+    } else {
+        guessesRemaining--;
+        currentGuessArray = [];
+        letterPosition = 0;
+
+        if (guessesRemaining === 0) {
+            toastr.error("Game Over.")
+            return;
+        };
+    };
+
+};
+
 // Letter Functions
 
 // Insert a letter
@@ -78,7 +119,7 @@ function insertLetter(pressedKey) {
     let box = row.children[letterPosition];
     box.textContent = pressedKey;
     box.classList.add("filled-box");
-    currentGuess.push(pressedKey);
+    currentGuessArray.push(pressedKey);
     letterPosition += 1;
 };
 
@@ -88,53 +129,17 @@ function deleteLetter() {
     let box = row.children[letterPosition - 1];
     box.textContent = "";
     box.classList.remove("filled-box");
-    currentGuess.pop();
+    currentGuessArray.pop();
     letterPosition -= 1;
-};
-
-/* 
-Convert currentGuess array to a string
-Check if the guess is 5 words
-Check if word is in word list (if it is not in word list, flip returned false to true so if function can run)
-*/
-function checkGuess() {
-    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
-    let guessString = "";
-    let correctGuess = Array.from(correctGuessString);
-
-    for (const eachLetter of currentGuess) {
-        guessString += eachLetter;
-    };
-
-    if (guessString.length != 5) {
-        toastr.warning("Not enough letters");
-        return;
-    }
-
-    if (!words.includes(guessString)) {
-        toastr.warning("Not in word list");
-        return;
-    }
-
-    for (i = 0; i < correctGuess.length; i++) {
-        let box = row.children[i];
-        let letter = currentGuess[i];
-
-        let letterPosition = correctGuess.indexOf(currentGuess[i]);
-
-        // If letter is not found
-        if (letterPosition === -1) {
-            boxColor(grey, i);
-        }
-    }
-
+    box.setAttribute("data-boxcolor", "");
 };
 
 // Function to change box color
-function boxColor(color, position) {
+function addBoxColor(color, position) {
     let boxColor = color;
     let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
     let box = row.children[position];
 
-    box.classList.add(`${boxColor}`);
+    box.setAttribute("data-boxcolor", `${boxColor}-box`);
 };
+
