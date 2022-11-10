@@ -47,6 +47,8 @@ document.addEventListener("keydown", function(inputKey) {
 Convert currentGuess array to a string
 Check if the guess is 5 words
 Check if word is in word list (if it is not in word list, flip returned false to true so if function can run)
+Check each letter of the guess array and match it to the correct guess array
+
 */
 function checkGuess() {
 
