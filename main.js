@@ -20,17 +20,17 @@ let correctGuessString = wordlist[Math.floor(Math.random() * wordlist.length)];
 document.addEventListener("keydown", function(inputKey) { 
     if (guessesRemaining === 0) {
         return;
-    };
+    }
 
     let pressedKey = String(inputKey.key);
 
     if (pressedKey === "Backspace" && letterPosition !== 0) {
         deleteLetter();
-    };
+    }
     
     if (pressedKey === "Enter") {
         checkGuess();
-    };
+    }
 
     let keyFound = pressedKey.match(/[a-z]/gi);
 
@@ -38,7 +38,7 @@ document.addEventListener("keydown", function(inputKey) {
         return;
     } else {
         insertLetter(pressedKey);
-    };
+    }
 });
 
 
@@ -59,7 +59,7 @@ function checkGuess() {
 
     for (const eachLetter of currentGuessArray) {
         currentGuessString += eachLetter;
-    };
+    }
 
     if (currentGuessString.length != 5) {
         toastr.warning("Not enough letters");
@@ -80,16 +80,20 @@ function checkGuess() {
         // If letter is not found
         if (letterPosition === -1) {
             addBoxColor("grey", i);
+            shadeKeyboard("grey", letter);
 
         // If letter is found and is in the right place
         } else if (currentGuessArray[i] === correctGuessArray[i]) {
             addBoxColor("green", i);
+            shadeKeyboard("green", letter);
+            correctGuessArray.pop[i];
 
         // If letter is found but not in the right place
         } else {
             addBoxColor("yellow", i);
-        };
-    };
+            shadeKeyboard("yellow", letter);
+        }
+    }
     
     if (currentGuessString === correctGuessString) {
         toastr.success("You Win!");
@@ -102,10 +106,10 @@ function checkGuess() {
         if (guessesRemaining === 0) {
             toastr.error("Game Over.")
             return;
-        };
-    };
+        }
+    }
 
-};
+}
 
 // Letter Functions
 
@@ -123,7 +127,7 @@ function insertLetter(pressedKey) {
     box.classList.add("filled-box");
     currentGuessArray.push(pressedKey);
     letterPosition += 1;
-};
+}
 
 // Delete a letter
 function deleteLetter() {
@@ -133,15 +137,26 @@ function deleteLetter() {
     box.classList.remove("filled-box");
     currentGuessArray.pop();
     letterPosition -= 1;
-    box.setAttribute("data-boxcolor", "");
-};
+}
 
 // Function to change box color
 function addBoxColor(color, position) {
-    let boxColor = color;
     let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
     let box = row.children[position];
 
-    box.setAttribute("data-boxcolor", `${boxColor}-box`);
-};
+    box.setAttribute("data-boxcolor", `${color}-box`);
+}
 
+// Function to shade keyboard
+function shadeKeyboard (color, letter) {
+    for (const element of document.getElementsByClassName("keyboard-button")) {
+        if (element.textContent === letter) { 
+            let oldColor = element.getAttribute("data-keyboardcolor");
+            if (oldColor === "green") {
+                return;
+            } else {
+                element.setAttribute("data-keyboardcolor", `${color}`);
+            }
+        }
+    }
+}
