@@ -44,22 +44,18 @@ document.addEventListener("keydown", function(inputKey) {
 
 
 /* 
-Convert currentGuess array to a string
-Check if the guess is 5 words
-Check if word is in word list (if it is not in word list, flip returned false to true so if function can run)
-Check each letter of the guess array and match it to the correct guess array
+Check if currentGuess string is 5 words
+Check if currentGuess string is a word in the word list
+Check letter in the currentGuess array is in the correctGuess array
+If above is true, 
 
 */
 function checkGuess() {
 
     console.log(correctGuessString);  
     let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
-    let currentGuessString = "";
+    let currentGuessString = currentGuessArray.join("");
     let correctGuessArray = Array.from(correctGuessString);
-
-    for (const eachLetter of currentGuessArray) {
-        currentGuessString += eachLetter;
-    }
 
     if (currentGuessString.length != 5) {
         toastr.warning("Not enough letters");
@@ -71,29 +67,29 @@ function checkGuess() {
         return;
     }
 
-    for (let i = 0; i < correctGuessArray.length; i++) {
-        let box = row.children[i];
-        let letter = currentGuessArray[i];
+    let remainingLetters = correctGuessString;
 
-        let letterPosition = correctGuessArray.indexOf(currentGuessArray[i]);
+    for (let i = 0; i < 5; i++) {
 
-        // If letter is not found
-        if (letterPosition === -1) {
-            addBoxColor("grey", i);
-            shadeKeyboard("grey", letter);
-
-        // If letter is found and is in the right place
-        } else if (currentGuessArray[i] === correctGuessArray[i]) {
+        // If letter in the right place
+        if (currentGuessArray[i] === correctGuessArray[i]) {
+            remainingLetters = remainingLetters.replace(currentGuessArray[i], "_");
             addBoxColor("green", i);
-            shadeKeyboard("green", letter);
-            correctGuessArray.pop[i];
-
-        // If letter is found but not in the right place
+            shadeKeyboard("green", currentGuessArray[i]);
+            console.log(remainingLetters);
         } else {
-            addBoxColor("yellow", i);
-            shadeKeyboard("yellow", letter);
+            addBoxColor("grey", i);
+            shadeKeyboard("grey", currentGuessArray[i]); 
         }
     }
+
+    for (let i = 0; i < 5; i++) {
+        if (remainingLetters.includes(currentGuessArray[i])) {
+            addBoxColor("yellow", i);
+            shadeKeyboard("yellow", currentGuessArray[i]); 
+        }
+    }
+
     
     if (currentGuessString === correctGuessString) {
         toastr.success("You Win!");
