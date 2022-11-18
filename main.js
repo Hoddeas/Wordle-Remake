@@ -41,15 +41,7 @@ document.addEventListener("keydown", function(inputKey) {
     }
 });
 
-
-
-/* 
-Check if currentGuess string is 5 words
-Check if currentGuess string is a word in the word list
-Check letter in the currentGuess array is in the correctGuess array
-If above is true, 
-
-*/
+// Function to check the guess
 function checkGuess() {
 
     console.log(correctGuessString);  
@@ -67,30 +59,31 @@ function checkGuess() {
         return;
     }
 
-    let remainingLetters = correctGuessString;
+    let remainingLettersInAnswer = correctGuessString;
 
+    // Change letters in the correct place green
     for (let i = 0; i < 5; i++) {
-
-        // If letter in the right place
         if (currentGuessArray[i] === correctGuessArray[i]) {
-            remainingLetters = remainingLetters.replace(currentGuessArray[i], "_");
+            remainingLettersInAnswer = remainingLettersInAnswer.replace(currentGuessArray[i], "_");
             addBoxColor("green", i);
             shadeKeyboard("green", currentGuessArray[i]);
-            console.log(remainingLetters);
         } else {
             addBoxColor("grey", i);
             shadeKeyboard("grey", currentGuessArray[i]); 
         }
     }
 
+    // Change remaining letters in the word but in the wrong place yellow
     for (let i = 0; i < 5; i++) {
-        if (remainingLetters.includes(currentGuessArray[i])) {
+        if (remainingLettersInAnswer.includes(currentGuessArray[i])) {
+            remainingLettersInAnswer = remainingLettersInAnswer.replace(currentGuessArray[i], "_");
             addBoxColor("yellow", i);
             shadeKeyboard("yellow", currentGuessArray[i]); 
         }
+        
     }
-
     
+    // If the word is correct end the game, if not remove a guess
     if (currentGuessString === correctGuessString) {
         toastr.success("You Win!");
         return;
@@ -98,11 +91,12 @@ function checkGuess() {
         guessesRemaining--;
         currentGuessArray = [];
         letterPosition = 0;
+    }
 
-        if (guessesRemaining === 0) {
-            toastr.error("Game Over.")
-            return;
-        }
+    // Ends the game if no guesses are left
+    if (guessesRemaining === 0) {
+        toastr.error("Game Over.")
+        return;
     }
 
 }
@@ -139,8 +133,13 @@ function deleteLetter() {
 function addBoxColor(color, position) {
     let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
     let box = row.children[position];
+    let oldColor = box.getAttribute("data-boxcolor");
+    if (oldColor === "green-box") {
+        return;
+    } else {
+        box.setAttribute("data-boxcolor", `${color}-box`);
+    }
 
-    box.setAttribute("data-boxcolor", `${color}-box`);
 }
 
 // Function to shade keyboard
