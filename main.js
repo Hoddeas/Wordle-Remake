@@ -97,7 +97,6 @@ function checkGuess() {
         toastr.error("Game Over.")
         return;
     }
-
 }
 
 // Letter Functions
@@ -138,7 +137,6 @@ function addBoxColor(color, position) {
     } else {
         box.setAttribute("data-boxcolor", `${color}-box`);
     }
-
 }
 
 // Function to shade keyboard
