@@ -45,7 +45,6 @@ document.addEventListener("keydown", function(inputKey) {
 function checkGuess() {
 
     console.log(correctGuessString);  
-    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
     let currentGuessString = currentGuessArray.join("");
     let correctGuessArray = Array.from(correctGuessString);
 
