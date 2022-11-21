@@ -1,11 +1,5 @@
 // Wordle Remake
 
-// Toastr Notification Settings
-toastr.options = {
-    positionClass: "toast-top-center",
-    timeOut: 500
-};
-
 // Words List
 import { wordlist } from "./words.js";
 
@@ -50,12 +44,12 @@ function checkGuess() {
     let correctGuessArray = Array.from(correctGuessString);
 
     if (currentGuessString.length != 5) {
-        toastr.warning("Not enough letters");
+        toast.warning("Not enough letters");
         return;
     }
 
     if (!wordlist.includes(currentGuessString)) {
-        toastr.warning("Not in word list");
+        toast.warning("Not in word list");
         return;
     }
 
@@ -85,7 +79,7 @@ function checkGuess() {
     
     // If the word is correct end the game, if not remove a guess
     if (currentGuessString === correctGuessString) {
-        toastr.success("You Win!");
+        toast.success("You Win!");
         return;
     } else {
         guessesRemaining--;
@@ -95,7 +89,7 @@ function checkGuess() {
 
     // Ends the game if no guesses are left
     if (guessesRemaining === 0) {
-        toastr.error("Game Over.")
+        toast.error("Game Over.")
         return;
     }
 

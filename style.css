@@ -7,6 +7,21 @@ hr {
   margin: 0px;
 }
 
+@keyframes gameboard-row-shake {
+  10%, 90% {
+    transform: translateX(-1px);
+  }
+  20%, 80% {
+    transform: translateX(2px);
+  }
+  30%, 50%, 70% {
+    transform: translateX(-4px);
+  }
+  40%, 60% {
+    transform: translateX(4px);
+  }
+}
+
 #gameboard {
   display: grid;
   grid-gap: 5px;
@@ -51,6 +66,10 @@ hr {
   background-color: #6aaa64;
   border: 2px solid #6aaa64;
   color: white;
+}
+
+.gameboard-box[data-animation="pop"] {
+
 }
   
 .gameboard-row {
