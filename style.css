@@ -7,21 +7,6 @@ hr {
   margin: 0px;
 }
 
-@keyframes gameboard-row-shake {
-  10%, 90% {
-    transform: translateX(-1px);
-  }
-  20%, 80% {
-    transform: translateX(2px);
-  }
-  30%, 50%, 70% {
-    transform: translateX(-4px);
-  }
-  40%, 60% {
-    transform: translateX(4px);
-  }
-}
-
 #gameboard {
   display: grid;
   grid-gap: 5px;
@@ -69,13 +54,25 @@ hr {
 }
 
 .gameboard-box[data-animation="pop"] {
+  animation-name: gameboard-box-pop;
+  animation-duration: 100ms;
+}
 
+.gameboard-box[data-animation="flip"] {
+  animation-name: gameboard-box-flip;
+  animation-duration: 250ms;
+  animation-timing-function: ease-in;
 }
   
 .gameboard-row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 5px;
+}
+
+.gameboard-row.shake {
+  animation-name: gameboard-row-shake;
+  animation-duration: 600ms;
 }
 
 
@@ -139,9 +136,37 @@ hr {
   font-size: 12px;
 }
 
-.toast-top-center {
-  top: 0px;
-  right: 0;
-  width: 100%;
-  margin-top: 7%;
+@keyframes gameboard-row-shake {
+  10%, 90% {
+    transform: translateX(-1px);
+  }
+  20%, 80% {
+    transform: translateX(2px);
+  }
+  30%, 50%, 70% {
+    transform: translateX(-4px);
+  }
+  40%, 60% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes gameboard-box-pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes gameboard-box-flip {
+  0% {
+    transform: rotateX(-90deg);
+  }
+  100% {
+    transform: rotateX(0);
+  }
 }

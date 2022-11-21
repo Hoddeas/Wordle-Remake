@@ -38,17 +38,22 @@ document.addEventListener("keydown", function(inputKey) {
 // Function to check the guess
 function checkGuess() {
 
-    console.log(correctGuessString);  
+    console.log(correctGuessString);
+    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let box = row.children[letterPosition];  
     let currentGuessString = currentGuessArray.join("");
     let correctGuessArray = Array.from(correctGuessString);
 
     if (currentGuessString.length != 5) {
-        toast.warning("Not enough letters");
+        row.classList.add("shake");
+        setTimeout(function(){
+            row.classList.remove("shake");
+        }, 600);
         return;
     }
 
     if (!wordlist.includes(currentGuessString)) {
-        toast.warning("Not in word list");
+        toastr.warning("Not in word list");
         return;
     }
 
@@ -73,7 +78,6 @@ function checkGuess() {
             addBoxColor("yellow", i);
             shadeKeyboard("yellow", currentGuessArray[i]); 
         }
-        
     }
     
     // If the word is correct end the game, if not remove a guess
@@ -91,6 +95,7 @@ function checkGuess() {
         toast.error("Game Over.")
         return;
     }
+
 }
 
 // Letter Functions
@@ -107,6 +112,10 @@ function insertLetter(pressedKey) {
     let box = row.children[letterPosition];
     box.textContent = pressedKey;
     box.classList.add("filled-box");
+    box.setAttribute("data-animation", "pop");
+    setTimeout(function(){
+        box.setAttribute("data-animation", "");
+    }, 100);
     currentGuessArray.push(pressedKey);
     letterPosition += 1;
 }
@@ -131,6 +140,7 @@ function addBoxColor(color, position) {
     } else {
         box.setAttribute("data-boxcolor", `${color}-box`);
     }
+
 }
 
 // Function to shade keyboard
