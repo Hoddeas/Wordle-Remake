@@ -9,6 +9,8 @@ let guessesRemaining = numberOfGuesses;
 let currentGuessArray = [];
 let letterPosition = 0;
 let correctGuessString = wordlist[Math.floor(Math.random() * wordlist.length)];
+let isAnimating = false;
+let startFlip = false;
 
 // Function to check key pressed
 document.addEventListener("keydown", function(inputKey) { 
@@ -24,6 +26,7 @@ document.addEventListener("keydown", function(inputKey) {
     
     if (pressedKey === "Enter") {
         checkGuess();
+        flipBoxes();
     }
 
     let keyFound = pressedKey.match(/[a-z]/gi);
@@ -40,22 +43,46 @@ function checkGuess() {
 
     console.log(correctGuessString);
     let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
-    let box = row.children[letterPosition];  
+    let box = row.children[letterPosition];
     let currentGuessString = currentGuessArray.join("");
     let correctGuessArray = Array.from(correctGuessString);
+    
 
     if (currentGuessString.length != 5) {
-        row.classList.add("shake");
-        setTimeout(function(){
-            row.classList.remove("shake");
-        }, 600);
+        if (isAnimating) {
+            return;
+        } else {
+            isAnimating = true;
+            row.classList.add("shake");
+            setTimeout(() => {
+                row.classList.remove("shake");
+                isAnimating = false;
+            }, 600);
+        }
         return;
     }
 
     if (!wordlist.includes(currentGuessString)) {
         toastr.warning("Not in word list");
+        if (isAnimating) {
+            return;
+        } else {
+            isAnimating = true;
+            row.classList.add("shake");
+            setTimeout(() => {
+                row.classList.remove("shake");
+                isAnimating = false;
+            }, 600);
+        }
         return;
     }
+
+            row.children[1].setAttribute("data-animation", "flip-in");
+            setTimeout(() => {
+                row.children[1].setAttribute("data-animation", "flip-out");
+            }, 250);
+
+/*
 
     let remainingLettersInAnswer = correctGuessString;
 
@@ -80,22 +107,24 @@ function checkGuess() {
         }
     }
     
+*/
+
     // If the word is correct end the game, if not remove a guess
-    if (currentGuessString === correctGuessString) {
-        toast.success("You Win!");
-        return;
-    } else {
-        guessesRemaining--;
-        currentGuessArray = [];
-        letterPosition = 0;
-    }
+    
+        if (currentGuessString === correctGuessString) {
+            toast.success("You Win!");
+            return;
+        } else {
+            guessesRemaining--;
+            currentGuessArray = [];
+            letterPosition = 0;
+        }
 
-    // Ends the game if no guesses are left
-    if (guessesRemaining === 0) {
-        toast.error("Game Over.")
-        return;
-    }
-
+        // Ends the game if no guesses are left
+        if (guessesRemaining === 0) {
+            toast.error("Game Over.")
+            return;
+        }
 }
 
 // Letter Functions
@@ -113,7 +142,7 @@ function insertLetter(pressedKey) {
     box.textContent = pressedKey;
     box.classList.add("filled-box");
     box.setAttribute("data-animation", "pop");
-    setTimeout(function(){
+    setTimeout(() => {
         box.setAttribute("data-animation", "");
     }, 100);
     currentGuessArray.push(pressedKey);
@@ -154,5 +183,14 @@ function shadeKeyboard (color, letter) {
                 element.setAttribute("data-keyboardcolor", `${color}`);
             }
         }
+    }
+}
+
+// Function to flip boxes when answer is checked
+function flipBoxes() {
+    let row = document.getElementsByClassName("gameboard-row")[5 - guessesRemaining];
+    console.log(guessesRemaining)
+    if (startFlip) {
+        
     }
 }

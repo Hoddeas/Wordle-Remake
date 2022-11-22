@@ -58,12 +58,18 @@ hr {
   animation-duration: 100ms;
 }
 
-.gameboard-box[data-animation="flip"] {
-  animation-name: gameboard-box-flip;
+.gameboard-box[data-animation="flip-in"] {
+  animation-name: gameboard-box-flip-in;
   animation-duration: 250ms;
   animation-timing-function: ease-in;
 }
   
+.gameboard-box[data-animation="flip-out"] {
+  animation-name: gameboard-box-flip-out;
+  animation-duration: 250ms;
+  animation-timing-function: ease-in;
+}
+
 .gameboard-row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -162,7 +168,16 @@ hr {
   }
 }
 
-@keyframes gameboard-box-flip {
+@keyframes gameboard-box-flip-in {
+  0% {
+    transform: rotateX(0);
+  }
+  100% {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes gameboard-box-flip-out {
   0% {
     transform: rotateX(-90deg);
   }
