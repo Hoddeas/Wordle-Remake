@@ -77,10 +77,11 @@ function checkGuess() {
         return;
     }
 
-            row.children[1].setAttribute("data-animation", "flip-in");
-            setTimeout(() => {
-                row.children[1].setAttribute("data-animation", "flip-out");
-            }, 250);
+    // Flip animation when guess is entered
+    for (let i = 0; i < 5; i++) {
+            flipBoxes(i);
+    }
+
 
 /*
 
@@ -187,10 +188,13 @@ function shadeKeyboard (color, letter) {
 }
 
 // Function to flip boxes when answer is checked
-function flipBoxes() {
-    let row = document.getElementsByClassName("gameboard-row")[5 - guessesRemaining];
-    console.log(guessesRemaining)
-    if (startFlip) {
-        
-    }
+function flipBoxes(boxNumber) {
+    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    row.children[boxNumber].setAttribute("data-animation", "flip-in");
+    row.children[boxNumber].addEventListener("animationend", () => {
+        row.children[boxNumber].setAttribute("data-animation", "flip-out");
+        row.children[boxNumber].addEventListener("animationend", () => {
+            row.children[boxNumber].setAttribute("data-animation", "");
+        });
+    });
 }
