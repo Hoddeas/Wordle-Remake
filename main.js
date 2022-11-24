@@ -11,6 +11,7 @@ let letterPosition = 0;
 let correctGuessString = wordlist[Math.floor(Math.random() * wordlist.length)];
 let isAnimating = false;
 let startFlip = false;
+let boxColorArray = [];
 
 // Function to check key pressed
 document.addEventListener("keydown", function(inputKey) { 
@@ -26,7 +27,6 @@ document.addEventListener("keydown", function(inputKey) {
     
     if (pressedKey === "Enter") {
         checkGuess();
-        flipBoxes();
     }
 
     let keyFound = pressedKey.match(/[a-z]/gi);
@@ -77,24 +77,16 @@ function checkGuess() {
         return;
     }
 
-    // Flip animation when guess is entered
-    for (let i = 0; i < 5; i++) {
-            flipBoxes(i);
-    }
-
-
-/*
-
     let remainingLettersInAnswer = correctGuessString;
 
     // Change letters in the correct place green
     for (let i = 0; i < 5; i++) {
         if (currentGuessArray[i] === correctGuessArray[i]) {
             remainingLettersInAnswer = remainingLettersInAnswer.replace(currentGuessArray[i], "_");
-            addBoxColor("green", i);
+            boxColorArray.splice(i, 1, "green");
             shadeKeyboard("green", currentGuessArray[i]);
         } else {
-            addBoxColor("grey", i);
+            boxColorArray.splice(i, 1, "grey");
             shadeKeyboard("grey", currentGuessArray[i]); 
         }
     }
@@ -103,12 +95,16 @@ function checkGuess() {
     for (let i = 0; i < 5; i++) {
         if (remainingLettersInAnswer.includes(currentGuessArray[i])) {
             remainingLettersInAnswer = remainingLettersInAnswer.replace(currentGuessArray[i], "_");
-            addBoxColor("yellow", i);
+            boxColorArray.splice(i, 1, "yellow");
             shadeKeyboard("yellow", currentGuessArray[i]); 
         }
     }
-    
-*/
+
+    for (let i = 0; i < 5; i++) {
+        flipBoxes(i);
+    }
+
+    console.log(boxColorArray);
 
     // If the word is correct end the game, if not remove a guess
     
@@ -126,6 +122,8 @@ function checkGuess() {
             toast.error("Game Over.")
             return;
         }
+
+        console.log("done")
 }
 
 // Letter Functions
@@ -162,7 +160,7 @@ function deleteLetter() {
 
 // Function to change box color
 function addBoxColor(color, position) {
-    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let row = document.getElementsByClassName("gameboard-row")[5 - guessesRemaining];
     let box = row.children[position];
     let oldColor = box.getAttribute("data-boxcolor");
     if (oldColor === "green-box") {
@@ -170,7 +168,6 @@ function addBoxColor(color, position) {
     } else {
         box.setAttribute("data-boxcolor", `${color}-box`);
     }
-
 }
 
 // Function to shade keyboard
@@ -192,6 +189,7 @@ function flipBoxes(boxNumber) {
     let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
     row.children[boxNumber].setAttribute("data-animation", "flip-in");
     row.children[boxNumber].addEventListener("animationend", () => {
+        addBoxColor(boxColorArray[boxNumber], boxNumber);
         row.children[boxNumber].setAttribute("data-animation", "flip-out");
         row.children[boxNumber].addEventListener("animationend", () => {
             row.children[boxNumber].setAttribute("data-animation", "");
