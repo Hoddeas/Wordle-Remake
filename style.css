@@ -13,22 +13,38 @@ hr {
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  width: 319px;
-  height: 382px;
+  width: 330px;
+  height: 400px;
   padding: 10px;
   margin: auto;
+  grid-template-rows: repeat(6, 1fr);
+}
+
+.gameboard-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 5px;
+}
+
+.gameboard-row.shake {
+  animation-name: gameboard-row-shake;
+  animation-duration: 600ms;
 }
   
+div {
+  display: block;
+}
+
 .gameboard-box {
-  display: flex; 
+  display: inline-flex; 
   border: 2px solid#d3d6da;
-  font-size: 32px;
-  font-weight: 700;
-  height: 55px;
-  width: 55px;
+  font-size: 2rem;
+  font-weight: bold;
+  width: 100%;
   text-transform: uppercase;
   align-items: center;
   justify-content: center;
+  user-select: none;
 }
   
 .filled-box {
@@ -69,18 +85,6 @@ hr {
   animation-duration: 250ms;
   animation-timing-function: ease-in;
 }
-
-.gameboard-row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 5px;
-}
-
-.gameboard-row.shake {
-  animation-name: gameboard-row-shake;
-  animation-duration: 600ms;
-}
-
 
 #keyboard {
   height: 200px;

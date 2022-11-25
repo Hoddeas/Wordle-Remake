@@ -42,38 +42,18 @@ document.addEventListener("keydown", function(inputKey) {
 function checkGuess() {
 
     console.log(correctGuessString);
-    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
-    let box = row.children[letterPosition];
     let currentGuessString = currentGuessArray.join("");
     let correctGuessArray = Array.from(correctGuessString);
     
 
     if (currentGuessString.length != 5) {
-        if (isAnimating) {
-            return;
-        } else {
-            isAnimating = true;
-            row.classList.add("shake");
-            setTimeout(() => {
-                row.classList.remove("shake");
-                isAnimating = false;
-            }, 600);
-        }
+        shakeRow();
         return;
     }
 
     if (!wordlist.includes(currentGuessString)) {
         toastr.warning("Not in word list");
-        if (isAnimating) {
-            return;
-        } else {
-            isAnimating = true;
-            row.classList.add("shake");
-            setTimeout(() => {
-                row.classList.remove("shake");
-                isAnimating = false;
-            }, 600);
-        }
+        shakeRow();
         return;
     }
 
@@ -137,13 +117,13 @@ function insertLetter(pressedKey) {
     pressedKey = pressedKey.toLowerCase();
 
     let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
-    let box = row.children[letterPosition];
+    let box = row.children[letterPosition].firstElementChild;
     box.textContent = pressedKey;
     box.classList.add("filled-box");
     box.setAttribute("data-animation", "pop");
-    setTimeout(() => {
+    box.addEventListener("animationend", () => {
         box.setAttribute("data-animation", "");
-    }, 100);
+    });
     currentGuessArray.push(pressedKey);
     letterPosition += 1;
 }
@@ -151,7 +131,7 @@ function insertLetter(pressedKey) {
 // Delete a letter
 function deleteLetter() {
     let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
-    let box = row.children[letterPosition - 1];
+    let box = row.children[letterPosition - 1].firstElementChild;
     box.textContent = "";
     box.classList.remove("filled-box");
     currentGuessArray.pop();
@@ -161,7 +141,7 @@ function deleteLetter() {
 // Function to change box color
 function addBoxColor(color, position) {
     let row = document.getElementsByClassName("gameboard-row")[5 - guessesRemaining];
-    let box = row.children[position];
+    let box = row.children[position].firstElementChild;
     let oldColor = box.getAttribute("data-boxcolor");
     if (oldColor === "green-box") {
         return;
@@ -187,12 +167,29 @@ function shadeKeyboard (color, letter) {
 // Function to flip boxes when answer is checked
 function flipBoxes(boxNumber) {
     let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
-    row.children[boxNumber].setAttribute("data-animation", "flip-in");
-    row.children[boxNumber].addEventListener("animationend", () => {
+    let box = row.children[boxNumber].firstElementChild;
+    console.log(boxNumber)
+    box.setAttribute("data-animation", "flip-in");
+    box.addEventListener("animationend", () => {
         addBoxColor(boxColorArray[boxNumber], boxNumber);
-        row.children[boxNumber].setAttribute("data-animation", "flip-out");
-        row.children[boxNumber].addEventListener("animationend", () => {
-            row.children[boxNumber].setAttribute("data-animation", "");
+        box.setAttribute("data-animation", "flip-out");
+        box.addEventListener("animationend", () => {
+            box.setAttribute("data-animation", "");
         });
     });
+}
+
+// Shake row if word is too short or not in word list
+function shakeRow() {
+    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    if (isAnimating) {
+        return;
+    } else {
+        isAnimating = true;
+        row.classList.add("shake");
+        row.addEventListener("animationend", () => {
+            row.classList.remove("shake");
+            isAnimating = false;
+        });
+    }
 }
