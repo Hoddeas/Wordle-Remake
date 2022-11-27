@@ -6,6 +6,7 @@ import { wordlist } from "./words.js";
 // Global Variables
 let numberOfGuesses = 6;
 let guessesRemaining = numberOfGuesses;
+let rowIndex = 0;
 let currentGuessArray = [];
 let letterPosition = 0;
 let correctGuessString = wordlist[Math.floor(Math.random() * wordlist.length)];
@@ -92,6 +93,7 @@ function checkGuess() {
             toast.success("You Win!");
             return;
         } else {
+            rowIndex++;
             guessesRemaining--;
             currentGuessArray = [];
             letterPosition = 0;
@@ -116,7 +118,7 @@ function insertLetter(pressedKey) {
 
     pressedKey = pressedKey.toLowerCase();
 
-    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let row = document.getElementsByClassName("gameboard-row")[rowIndex];
     let box = row.children[letterPosition].firstElementChild;
     box.textContent = pressedKey;
     box.classList.add("filled-box");
@@ -130,7 +132,7 @@ function insertLetter(pressedKey) {
 
 // Delete a letter
 function deleteLetter() {
-    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let row = document.getElementsByClassName("gameboard-row")[rowIndex];
     let box = row.children[letterPosition - 1].firstElementChild;
     box.textContent = "";
     box.classList.remove("filled-box");
@@ -140,7 +142,7 @@ function deleteLetter() {
 
 // Function to change box color
 function addBoxColor(color, position) {
-    let row = document.getElementsByClassName("gameboard-row")[5 - guessesRemaining];
+    let row = document.getElementsByClassName("gameboard-row")[rowIndex - 1];
     let box = row.children[position].firstElementChild;
     let oldColor = box.getAttribute("data-boxcolor");
     if (oldColor === "green-box") {
@@ -166,7 +168,7 @@ function shadeKeyboard (color, letter) {
 
 // Function to flip boxes when answer is checked
 function flipBoxes(boxNumber) {
-    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let row = document.getElementsByClassName("gameboard-row")[rowIndex];
     let box = row.children[boxNumber].firstElementChild;
     console.log(boxNumber)
     box.setAttribute("data-animation", "flip-in");
@@ -181,7 +183,7 @@ function flipBoxes(boxNumber) {
 
 // Shake row if word is too short or not in word list
 function shakeRow() {
-    let row = document.getElementsByClassName("gameboard-row")[6 - guessesRemaining];
+    let row = document.getElementsByClassName("gameboard-row")[rowIndex];
     if (isAnimating) {
         return;
     } else {
