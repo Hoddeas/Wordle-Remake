@@ -4,14 +4,18 @@
 import { wordlist } from "./words.js";
 
 // Global Variables
-let numberOfGuesses = 6;
-let guessesRemaining = numberOfGuesses;
-let rowIndex = 0;
-let currentGuessArray = [];
-let letterPosition = 0;
-let correctGuessString = wordlist[Math.floor(Math.random() * wordlist.length)];
 let isAnimating = false;
 let startFlip = false;
+
+// Guess Variables
+let numberOfGuesses = 6;
+let guessesRemaining = numberOfGuesses;
+let currentGuessArray = [];
+let correctGuessString = wordlist[Math.floor(Math.random() * wordlist.length)];
+
+// Gameboard Variables
+let rowIndex = 0;
+let boxIndex = 0;
 let boxColorArray = [];
 
 // Function to check key pressed
@@ -22,7 +26,7 @@ document.addEventListener("keydown", function(inputKey) {
 
     let pressedKey = String(inputKey.key);
 
-    if (pressedKey === "Backspace" && letterPosition !== 0) {
+    if (pressedKey === "Backspace" && boxIndex !== 0) {
         deleteLetter();
     }
     
@@ -96,7 +100,7 @@ function checkGuess() {
             rowIndex++;
             guessesRemaining--;
             currentGuessArray = [];
-            letterPosition = 0;
+            boxIndex = 0;
         }
 
         // Ends the game if no guesses are left
@@ -112,14 +116,14 @@ function checkGuess() {
 
 // Insert a letter
 function insertLetter(pressedKey) {
-    if (letterPosition === 5) {
+    if (boxIndex === 5) {
         return;
     };
 
     pressedKey = pressedKey.toLowerCase();
 
     let row = document.getElementsByClassName("gameboard-row")[rowIndex];
-    let box = row.children[letterPosition].firstElementChild;
+    let box = row.children[boxIndex].firstElementChild;
     box.textContent = pressedKey;
     box.classList.add("filled-box");
     box.setAttribute("data-animation", "pop");
@@ -127,17 +131,17 @@ function insertLetter(pressedKey) {
         box.setAttribute("data-animation", "");
     });
     currentGuessArray.push(pressedKey);
-    letterPosition += 1;
+    boxIndex += 1;
 }
 
 // Delete a letter
 function deleteLetter() {
     let row = document.getElementsByClassName("gameboard-row")[rowIndex];
-    let box = row.children[letterPosition - 1].firstElementChild;
+    let box = row.children[boxIndex - 1].firstElementChild;
     box.textContent = "";
     box.classList.remove("filled-box");
     currentGuessArray.pop();
-    letterPosition -= 1;
+    boxIndex -= 1;
 }
 
 // Function to change box color

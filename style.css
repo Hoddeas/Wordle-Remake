@@ -1,10 +1,23 @@
 body {
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
 }
 
-hr {
-  margin: 0px;
+header {
+  display: flex;
+  border-bottom: 1px solid #d3d6da;
+  height: 65px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.title {
+  font-family: "arial";
+  font-size: 32px;
+  letter-spacing: 0.01em;
+  font-weight: 700;
 }
 
 #gameboard {
@@ -29,10 +42,6 @@ hr {
 .gameboard-row.shake {
   animation-name: gameboard-row-shake;
   animation-duration: 600ms;
-}
-  
-div {
-  display: block;
 }
 
 .gameboard-box {
@@ -89,6 +98,7 @@ div {
 #keyboard {
   height: 200px;
   align-items: center;
+  user-select: none;
 }
 
 #keyboard div {
@@ -119,6 +129,7 @@ div {
   justify-content: center;
   align-items: center;
   color: black;
+  outline: none;
 }
 
 .keyboard-button:last-of-type {
