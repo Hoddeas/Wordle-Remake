@@ -5,7 +5,6 @@ import { wordlist } from "./words.js";
 
 // Global Variables
 let isAnimating = false;
-let startFlip = false;
 
 // Guess Variables
 let numberOfGuesses = 6;
@@ -85,31 +84,51 @@ function checkGuess() {
         }
     }
 
-    for (let i = 0; i < 5; i++) {
-        flipBoxes(i);
+    // Flip boxes then check guess
+    if (isAnimating) {
+        return;
+    } else {
+        isAnimating = true;
+        let doneAnimationConfirmation = 0;
+        let row = document.getElementsByClassName("gameboard-row")[rowIndex];
+        for (let i = 0; i < 5; i++) {
+            let box = row.children[i].firstElementChild;
+            setTimeout(() => {
+                box.setAttribute("data-animation", "flip-in");
+                box.addEventListener("animationend", () => {
+                    addBoxColor(boxColorArray[i], i);
+                    box.setAttribute("data-animation", "flip-out");
+                    box.addEventListener("animationend", () => {
+                        box.setAttribute("data-animation", "");
+                        doneAnimationConfirmation++;
+                        if (doneAnimationConfirmation === 5) {
+                                    // If the word is correct end the game, if not remove a guess
+                                    if (currentGuessString === correctGuessString) {
+                                        toast.success("You Win!");
+                                        return;
+                                    } else {
+                                        rowIndex++;
+                                        guessesRemaining--;
+                                        currentGuessArray = [];
+                                        boxIndex = 0;
+                                    }
+
+                                    // Ends the game if no guesses are left
+                                    if (guessesRemaining === 0) {
+                                        toast.error("Game Over.")
+                                        return;
+                                    }
+                                    isAnimating = false;
+                                    
+                        }
+                    });
+                });
+            }, i * 500);
+        }
     }
 
     console.log(boxColorArray);
 
-    // If the word is correct end the game, if not remove a guess
-    
-        if (currentGuessString === correctGuessString) {
-            toast.success("You Win!");
-            return;
-        } else {
-            rowIndex++;
-            guessesRemaining--;
-            currentGuessArray = [];
-            boxIndex = 0;
-        }
-
-        // Ends the game if no guesses are left
-        if (guessesRemaining === 0) {
-            toast.error("Game Over.")
-            return;
-        }
-
-        console.log("done")
 }
 
 // Letter Functions
@@ -146,7 +165,7 @@ function deleteLetter() {
 
 // Function to change box color
 function addBoxColor(color, position) {
-    let row = document.getElementsByClassName("gameboard-row")[rowIndex - 1];
+    let row = document.getElementsByClassName("gameboard-row")[rowIndex];
     let box = row.children[position].firstElementChild;
     let oldColor = box.getAttribute("data-boxcolor");
     if (oldColor === "green-box") {
@@ -168,21 +187,6 @@ function shadeKeyboard (color, letter) {
             }
         }
     }
-}
-
-// Function to flip boxes when answer is checked
-function flipBoxes(boxNumber) {
-    let row = document.getElementsByClassName("gameboard-row")[rowIndex];
-    let box = row.children[boxNumber].firstElementChild;
-    console.log(boxNumber)
-    box.setAttribute("data-animation", "flip-in");
-    box.addEventListener("animationend", () => {
-        addBoxColor(boxColorArray[boxNumber], boxNumber);
-        box.setAttribute("data-animation", "flip-out");
-        box.addEventListener("animationend", () => {
-            box.setAttribute("data-animation", "");
-        });
-    });
 }
 
 // Shake row if word is too short or not in word list
