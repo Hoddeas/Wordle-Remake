@@ -4,7 +4,9 @@
 import { wordlist } from "./words.js";
 
 // Global Variables
-let isAnimating = false;
+let isAnimatingShake = false;
+let isAnimatingFlip = false;
+let isAnimatingBounce = false;
 
 // Guess Variables
 let numberOfGuesses = 6;
@@ -48,7 +50,6 @@ function checkGuess() {
     console.log(correctGuessString);
     let currentGuessString = currentGuessArray.join("");
     let correctGuessArray = Array.from(correctGuessString);
-    
 
     if (currentGuessString.length != 5) {
         shakeRow();
@@ -84,13 +85,16 @@ function checkGuess() {
         }
     }
 
-    // Flip boxes then check guess
-    if (isAnimating) {
+    let doneAnimationConfirmation = 0;
+    let row = document.getElementsByClassName("gameboard-row")[rowIndex];
+
+    // Flip boxes then check guess only if boxes aren't already flipping or bouncing
+
+    if (isAnimatingFlip || isAnimatingBounce) {
         return;
     } else {
-        isAnimating = true;
-        let doneAnimationConfirmation = 0;
-        let row = document.getElementsByClassName("gameboard-row")[rowIndex];
+        isAnimatingFlip = true;
+        doneAnimationConfirmation = 0;
         for (let i = 0; i < 5; i++) {
             let box = row.children[i].firstElementChild;
             setTimeout(() => {
@@ -102,8 +106,12 @@ function checkGuess() {
                         box.setAttribute("data-animation", "");
                         doneAnimationConfirmation++;
                         if (doneAnimationConfirmation === 5) {
-                                    // If the word is correct end the game, if not remove a guess
+                                    // If the word is wrong, remove a guess, if it is correct, end the game.
                                     if (currentGuessString === correctGuessString) {
+                                        isAnimatingBounce = true;
+                                        for (let i = 0; i < 5; i++) {
+                                            row.children[i].classList.add("win");
+                                        }
                                         toast.success("You Win!");
                                         return;
                                     } else {
@@ -118,8 +126,7 @@ function checkGuess() {
                                         toast.error("Game Over.")
                                         return;
                                     }
-                                    isAnimating = false;
-                                    
+                                    isAnimatingFlip = false;
                         }
                     });
                 });
@@ -127,9 +134,8 @@ function checkGuess() {
         }
     }
 
-    console.log(boxColorArray);
-
 }
+
 
 // Letter Functions
 
@@ -192,14 +198,14 @@ function shadeKeyboard (color, letter) {
 // Shake row if word is too short or not in word list
 function shakeRow() {
     let row = document.getElementsByClassName("gameboard-row")[rowIndex];
-    if (isAnimating) {
+    if (isAnimatingShake) {
         return;
     } else {
-        isAnimating = true;
+        isAnimatingShake = true;
         row.classList.add("shake");
         row.addEventListener("animationend", () => {
             row.classList.remove("shake");
-            isAnimating = false;
+            isAnimatingShake = false;
         });
     }
 }
