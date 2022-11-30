@@ -19,8 +19,11 @@ let rowIndex = 0;
 let boxIndex = 0;
 let boxColorArray = [];
 
-// Function to check key pressed
-document.addEventListener("keydown", function(inputKey) { 
+// Keyboard Variables
+let keyboard = document.getElementById("keyboard");
+
+// Event listener for pressed keys
+document.addEventListener("keydown", (inputKey) => { 
     if (guessesRemaining === 0) {
         return;
     }
@@ -43,6 +46,38 @@ document.addEventListener("keydown", function(inputKey) {
         insertLetter(pressedKey);
     }
 });
+
+// Event listener for clicked keys
+keyboard.addEventListener("click", (inputKey) => {
+    let isButton = inputKey.target.nodeName === "BUTTON";
+
+    if (!isButton) {
+        return;
+    }
+
+    if (guessesRemaining === 0) {
+        return;
+    }
+
+    let clickedKey = inputKey.target.textContent;
+
+    console.log(inputKey.target.id)
+
+    if (inputKey.target.id === "Backspace" && boxIndex !== 0) {
+        deleteLetter();
+    }
+    
+    if (clickedKey === "Enter") {
+        checkGuess();
+    }
+
+    if (clickedKey.length > 1) {
+        return;
+    } else {
+        insertLetter(clickedKey);
+    }
+
+})
 
 // Function to check the guess
 function checkGuess() {
