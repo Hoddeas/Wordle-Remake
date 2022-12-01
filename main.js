@@ -3,6 +3,9 @@
 // Words List
 import { wordlist } from "./words.js";
 
+// Toast Notification
+
+
 // Global Variables
 let isAnimatingShake = false;
 let isAnimatingFlip = false;
@@ -13,6 +16,8 @@ let numberOfGuesses = 6;
 let guessesRemaining = numberOfGuesses;
 let currentGuessArray = [];
 let correctGuessString = wordlist[Math.floor(Math.random() * wordlist.length)];
+
+console.log(correctGuessString);
 
 // Gameboard Variables
 let rowIndex = 0;
@@ -50,6 +55,7 @@ document.addEventListener("keydown", (inputKey) => {
 // Event listener for clicked keys
 keyboard.addEventListener("click", (inputKey) => {
     let isButton = inputKey.target.nodeName === "BUTTON";
+    let isBackspace = inputKey.target.id === "backspace";
 
     if (!isButton) {
         return;
@@ -61,9 +67,7 @@ keyboard.addEventListener("click", (inputKey) => {
 
     let clickedKey = inputKey.target.textContent;
 
-    console.log(inputKey.target.id)
-
-    if (inputKey.target.id === "Backspace" && boxIndex !== 0) {
+    if (isBackspace && boxIndex !== 0) {
         deleteLetter();
     }
     
@@ -71,7 +75,7 @@ keyboard.addEventListener("click", (inputKey) => {
         checkGuess();
     }
 
-    if (clickedKey.length > 1) {
+    if (clickedKey.length > 1 || isBackspace) {
         return;
     } else {
         insertLetter(clickedKey);
@@ -81,18 +85,17 @@ keyboard.addEventListener("click", (inputKey) => {
 
 // Function to check the guess
 function checkGuess() {
-
-    console.log(correctGuessString);
     let currentGuessString = currentGuessArray.join("");
     let correctGuessArray = Array.from(correctGuessString);
 
     if (currentGuessString.length != 5) {
+        createToast("Not enough letters");
         shakeRow();
         return;
     }
 
     if (!wordlist.includes(currentGuessString)) {
-        toastr.warning("Not in word list");
+        createToast("Not in word list");
         shakeRow();
         return;
     }
@@ -141,34 +144,33 @@ function checkGuess() {
                         box.setAttribute("data-animation", "");
                         doneAnimationConfirmation++;
                         if (doneAnimationConfirmation === 5) {
-                                    // If the word is wrong, remove a guess, if it is correct, end the game.
-                                    if (currentGuessString === correctGuessString) {
-                                        isAnimatingBounce = true;
-                                        for (let i = 0; i < 5; i++) {
-                                            row.children[i].classList.add("win");
-                                        }
-                                        toast.success("You Win!");
-                                        return;
-                                    } else {
-                                        rowIndex++;
-                                        guessesRemaining--;
-                                        currentGuessArray = [];
-                                        boxIndex = 0;
-                                    }
+                            // If the word is wrong, remove a guess, if it is correct, end the game.
+                            if (currentGuessString === correctGuessString) {
+                                isAnimatingBounce = true;
+                                for (let i = 0; i < 5; i++) {
+                                    row.children[i].classList.add("win");
+                                }
+                                toast.success("You Win!");
+                                return;
+                            } else {
+                                rowIndex++;
+                                guessesRemaining--;
+                                currentGuessArray = [];
+                                boxIndex = 0;
+                            }
 
-                                    // Ends the game if no guesses are left
-                                    if (guessesRemaining === 0) {
-                                        toast.error("Game Over.")
-                                        return;
-                                    }
-                                    isAnimatingFlip = false;
+                            // Ends the game if no guesses are left
+                            if (guessesRemaining === 0) {
+                                toast.error("Game Over.")
+                                return;
+                            }
+                            isAnimatingFlip = false;
                         }
                     });
                 });
             }, i * 500);
         }
     }
-
 }
 
 
@@ -179,6 +181,10 @@ function insertLetter(pressedKey) {
     if (boxIndex === 5) {
         return;
     };
+
+    if (isAnimatingFlip || isAnimatingBounce) {
+        return;
+    }
 
     pressedKey = pressedKey.toLowerCase();
 
@@ -198,6 +204,11 @@ function insertLetter(pressedKey) {
 function deleteLetter() {
     let row = document.getElementsByClassName("gameboard-row")[rowIndex];
     let box = row.children[boxIndex - 1].firstElementChild;
+
+    if (isAnimatingFlip || isAnimatingBounce) {
+        return;
+    }
+
     box.textContent = "";
     box.classList.remove("filled-box");
     currentGuessArray.pop();
@@ -243,4 +254,14 @@ function shakeRow() {
             isAnimatingShake = false;
         });
     }
+}
+
+// Toast Notification Functions
+
+// Create toast notification
+function createToast(message) {
+    let toastNotif = document.createElement("div");
+    toastNotif.className = "toast-notif";
+    toastNotif.textContent = `${message}`;
+    document.getElementById("toast-container").appendChild(toastNotif);
 }

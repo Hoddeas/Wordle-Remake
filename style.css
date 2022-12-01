@@ -56,11 +56,28 @@ header {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 5px;
+  position: relative;
+  z-index: 0;
 }
 
 .gameboard-row.shake {
   animation-name: gameboard-row-shake;
   animation-duration: 600ms;
+}
+
+@keyframes gameboard-row-shake {
+  10%, 90% {
+    transform: translateX(-1px);
+  }
+  20%, 80% {
+    transform: translateX(2px);
+  }
+  30%, 50%, 70% {
+    transform: translateX(-4px);
+  }
+  40%, 60% {
+    transform: translateX(4px);
+  }
 }
 
 .gameboard-row.win {
@@ -112,10 +129,30 @@ header {
   animation-duration: 100ms;
 }
 
+@keyframes gameboard-box-pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
 .gameboard-box[data-animation="flip-in"] {
   animation-name: gameboard-box-flip-in;
   animation-duration: 250ms;
   animation-timing-function: ease-in;
+}
+
+@keyframes gameboard-box-flip-in {
+  0% {
+    transform: rotateX(0);
+  }
+  100% {
+    transform: rotateX(-90deg);
+  }
 }
   
 .gameboard-box[data-animation="flip-out"] {
@@ -124,9 +161,39 @@ header {
   animation-timing-function: ease-in;
 }
 
+@keyframes gameboard-box-flip-out {
+  0% {
+    transform: rotateX(-90deg);
+  }
+  100% {
+    transform: rotateX(0);
+  }
+}
+
 .win {
   animation-name: bounce;
   animation-duration: 1000ms;
+}
+
+@keyframes bounce {
+  0%, 20% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+  80% {
+    transform: translateY(2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .keyboard {
@@ -170,6 +237,11 @@ header {
   margin: 0;
 }
 
+.keyboard-button.largerKeys {
+  flex: 1.5;
+  font-size: 12px;
+}
+
 .keyboard-button[data-keyboardcolor="green"] {
   background-color: #6aaa64;
   color: white;
@@ -191,67 +263,36 @@ header {
   font-size: 12px;
 }
 
-@keyframes gameboard-row-shake {
-  10%, 90% {
-    transform: translateX(-1px);
-  }
-  20%, 80% {
-    transform: translateX(2px);
-  }
-  30%, 50%, 70% {
-    transform: translateX(-4px);
-  }
-  40%, 60% {
-    transform: translateX(4px);
-  }
+.toast-container {
+  position: absolute;
+  top: 45px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  pointer-events: none;
+  width: fit-content;
 }
 
-@keyframes gameboard-box-pop {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  40% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
+.toast-notif {
+  position: relative;
+  z-index: 1;
+  margin: 16px;
+  background-color: black;
+  color: white;
+  padding: 13px;
+  border: none;
+  border-radius: 4px;
+  opacity: 1;
+  transition: opacity 300ms cubic-bezier(0.645, 0.045, 0.355, 1);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
 }
 
-@keyframes gameboard-box-flip-in {
-  0% {
-    transform: rotateX(0);
-  }
-  100% {
-    transform: rotateX(-90deg);
-  }
+.toast-notif-fade {
+  opacity: 0;
 }
 
-@keyframes gameboard-box-flip-out {
-  0% {
-    transform: rotateX(-90deg);
-  }
-  100% {
-    transform: rotateX(0);
-  }
+img {
+  pointer-events: none;
 }
 
-@keyframes bounce {
-  0%, 20% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-30px);
-  }
-  50% {
-    transform: translateY(5px);
-  }
-  60% {
-    transform: translateY(-15px);
-  }
-  80% {
-    transform: translateY(2px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
