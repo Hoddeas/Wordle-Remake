@@ -3,15 +3,16 @@
 // Words List
 import { wordlist } from "./words.js";
 
-// Toast Notification
-
+// Toast Global Notification Variables
+let toastContainer = document.getElementById("toast-container");
+let toastIndex = -1;
 
 // Global Variables
 let isAnimatingShake = false;
 let isAnimatingFlip = false;
 let isAnimatingBounce = false;
 
-// Guess Variables
+// Guess Global Variables
 let numberOfGuesses = 6;
 let guessesRemaining = numberOfGuesses;
 let currentGuessArray = [];
@@ -19,12 +20,12 @@ let correctGuessString = wordlist[Math.floor(Math.random() * wordlist.length)];
 
 console.log(correctGuessString);
 
-// Gameboard Variables
+// Gameboard Global Variables
 let rowIndex = 0;
 let boxIndex = 0;
 let boxColorArray = [];
 
-// Keyboard Variables
+// Keyboard Global Variables
 let keyboard = document.getElementById("keyboard");
 
 // Event listener for pressed keys
@@ -263,5 +264,11 @@ function createToast(message) {
     let toastNotif = document.createElement("div");
     toastNotif.className = "toast-notif";
     toastNotif.textContent = `${message}`;
-    document.getElementById("toast-container").appendChild(toastNotif);
+    toastContainer.insertBefore(toastNotif, toastContainer.children[0]);
+    setTimeout(() => {
+        toastContainer.lastChild.classList.add("toast-notif-fade");
+    }, 1000);
+    setTimeout(() => {
+        toastContainer.removeChild(toastContainer.lastElementChild);
+    }, 2000);
 }

@@ -274,7 +274,6 @@ header {
 
 .toast-notif {
   position: relative;
-  z-index: 1;
   margin: 16px;
   background-color: black;
   color: white;
