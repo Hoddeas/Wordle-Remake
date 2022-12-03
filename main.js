@@ -262,13 +262,12 @@ function shakeRow() {
 // Create toast notification
 function createToast(message) {
     let toastNotif = document.createElement("div");
-    toastNotif.className = "toast-notif";
-    toastNotif.textContent = `${message}`;
+    toastNotif.textContent = message;
     toastContainer.insertBefore(toastNotif, toastContainer.children[0]);
     setTimeout(() => {
-        toastContainer.lastChild.classList.add("toast-notif-fade");
+        toastContainer.classList.add("toast-notif-fade");
+        toastNotif.addEventListener("transitionend", () => {
+            toastNotif.remove();
+        });
     }, 1000);
-    setTimeout(() => {
-        toastContainer.removeChild(toastContainer.lastElementChild);
-    }, 2000);
 }
