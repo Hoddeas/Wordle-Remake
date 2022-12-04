@@ -1,11 +1,11 @@
 // Wordle Remake
 
-// Words List
-import { wordlist } from "./words.js";
+// Word List and Target Words
+import { wordList } from "./wordList.js";
+import { targetWords } from "./targetWords.js";
 
 // Toast Global Notification Variables
 let toastContainer = document.getElementById("toast-container");
-let toastIndex = -1;
 
 // Global Variables
 let isAnimatingShake = false;
@@ -16,9 +16,10 @@ let isAnimatingBounce = false;
 let numberOfGuesses = 6;
 let guessesRemaining = numberOfGuesses;
 let currentGuessArray = [];
-let correctGuessString = wordlist[Math.floor(Math.random() * wordlist.length)];
+let correctWordString = targetWords[Math.floor(Math.random() * targetWords.length)];
 
-console.log(correctGuessString);
+console.log(correctWordString);
+console.log(document.getElementsByClassName("gameboard-box"))
 
 // Gameboard Global Variables
 let rowIndex = 0;
@@ -28,8 +29,21 @@ let boxColorArray = [];
 // Keyboard Global Variables
 let keyboard = document.getElementById("keyboard");
 
+// Reset Button and Button Container
+let resetButton = document.getElementById("reset-button");
+let resetButtonContainer = document.getElementById("button-container");
+
+// Event listener for reset button clicked to reset game
+resetButton.addEventListener("click", () => {
+    location.reload();
+});
+
 // Event listener for pressed keys
 document.addEventListener("keydown", (inputKey) => { 
+    if (inputKey.repeat) {
+        return;
+    }
+
     if (guessesRemaining === 0) {
         return;
     }
@@ -87,7 +101,7 @@ keyboard.addEventListener("click", (inputKey) => {
 // Function to check the guess
 function checkGuess() {
     let currentGuessString = currentGuessArray.join("");
-    let correctGuessArray = Array.from(correctGuessString);
+    let correctWordArray = Array.from(correctWordString);
 
     if (currentGuessString.length != 5) {
         createToast("Not enough letters");
@@ -95,17 +109,17 @@ function checkGuess() {
         return;
     }
 
-    if (!wordlist.includes(currentGuessString)) {
+    if (!wordList.includes(currentGuessString)) {
         createToast("Not in word list");
         shakeRow();
         return;
     }
 
-    let remainingLettersInAnswer = correctGuessString;
+    let remainingLettersInAnswer = correctWordString;
 
     // Change letters in the correct place green
     for (let i = 0; i < 5; i++) {
-        if (currentGuessArray[i] === correctGuessArray[i]) {
+        if (currentGuessArray[i] === correctWordArray[i]) {
             remainingLettersInAnswer = remainingLettersInAnswer.replace(currentGuessArray[i], "_");
             boxColorArray.splice(i, 1, "green");
             shadeKeyboard("green", currentGuessArray[i]);
@@ -137,21 +151,43 @@ function checkGuess() {
         for (let i = 0; i < 5; i++) {
             let box = row.children[i].firstElementChild;
             setTimeout(() => {
-                box.setAttribute("data-animation", "flip-in");
+                box.setAttribute("animation", "flip-in");
                 box.addEventListener("animationend", () => {
                     addBoxColor(boxColorArray[i], i);
-                    box.setAttribute("data-animation", "flip-out");
+                    box.setAttribute("animation", "flip-out");
                     box.addEventListener("animationend", () => {
-                        box.setAttribute("data-animation", "");
+                        box.setAttribute("animation", "");
                         doneAnimationConfirmation++;
                         if (doneAnimationConfirmation === 5) {
                             // If the word is wrong, remove a guess, if it is correct, end the game.
-                            if (currentGuessString === correctGuessString) {
+                            if (currentGuessString === correctWordString) {
                                 isAnimatingBounce = true;
                                 for (let i = 0; i < 5; i++) {
                                     row.children[i].classList.add("win");
                                 }
-                                toast.success("You Win!");
+                                switch (rowIndex) {
+                                    case 0:
+                                        createToast("Genius", null);
+                                        break;
+                                    case 1:
+                                        createToast("Magnificent", null);
+                                        break;
+                                    case 2:
+                                        createToast("Impressive", null);
+                                        break;
+                                    case 3:
+                                        createToast("Splendid", null);
+                                        break;
+                                    case 4:
+                                        createToast("Great", null);
+                                        break;
+                                    case 5:
+                                        createToast("Phew", null);
+                                        break;
+                                }
+                                setTimeout(() => {
+                                    resetButtonContainer.style.display = "flex";
+                                }, 2000);
                                 return;
                             } else {
                                 rowIndex++;
@@ -162,14 +198,17 @@ function checkGuess() {
 
                             // Ends the game if no guesses are left
                             if (guessesRemaining === 0) {
-                                toast.error("Game Over.")
+                                createToast(correctWordString.toUpperCase(), null);
+                                setTimeout(() => {
+                                    resetButtonContainer.style.display = "flex";
+                                }, 2000);
                                 return;
                             }
                             isAnimatingFlip = false;
                         }
                     });
                 });
-            }, i * 500);
+            }, i * 250);
         }
     }
 }
@@ -193,9 +232,9 @@ function insertLetter(pressedKey) {
     let box = row.children[boxIndex].firstElementChild;
     box.textContent = pressedKey;
     box.classList.add("filled-box");
-    box.setAttribute("data-animation", "pop");
+    box.setAttribute("animation", "pop");
     box.addEventListener("animationend", () => {
-        box.setAttribute("data-animation", "");
+        box.setAttribute("animation", "");
     });
     currentGuessArray.push(pressedKey);
     boxIndex += 1;
@@ -220,11 +259,11 @@ function deleteLetter() {
 function addBoxColor(color, position) {
     let row = document.getElementsByClassName("gameboard-row")[rowIndex];
     let box = row.children[position].firstElementChild;
-    let oldColor = box.getAttribute("data-boxcolor");
-    if (oldColor === "green-box") {
+    let oldColor = box.getAttribute("box-color");
+    if (oldColor === "green") {
         return;
     } else {
-        box.setAttribute("data-boxcolor", `${color}-box`);
+        box.setAttribute("box-color", color);
     }
 }
 
@@ -232,11 +271,11 @@ function addBoxColor(color, position) {
 function shadeKeyboard (color, letter) {
     for (const element of document.getElementsByClassName("keyboard-button")) {
         if (element.textContent === letter) { 
-            let oldColor = element.getAttribute("data-keyboardcolor");
+            let oldColor = element.getAttribute("keyboard-color");
             if (oldColor === "green") {
                 return;
             } else {
-                element.setAttribute("data-keyboardcolor", `${color}`);
+                element.setAttribute("keyboard-color", color);
             }
         }
     }
@@ -260,14 +299,19 @@ function shakeRow() {
 // Toast Notification Functions
 
 // Create toast notification
-function createToast(message) {
+function createToast(message, duration = 1000) {
     let toastNotif = document.createElement("div");
     toastNotif.textContent = message;
+    toastNotif.classList.add("toast-notif")
     toastContainer.insertBefore(toastNotif, toastContainer.children[0]);
+    if (duration == null) {
+        return;
+    }
+
     setTimeout(() => {
-        toastContainer.classList.add("toast-notif-fade");
+        toastNotif.classList.add("toast-notif-fade");
         toastNotif.addEventListener("transitionend", () => {
             toastNotif.remove();
         });
-    }, 1000);
+    }, duration);
 }
