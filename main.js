@@ -151,12 +151,12 @@ function checkGuess() {
         for (let i = 0; i < 5; i++) {
             let box = row.children[i].firstElementChild;
             setTimeout(() => {
-                box.setAttribute("animation", "flip-in");
+                box.setAttribute("data-animation", "flip-in");
                 box.addEventListener("animationend", () => {
                     addBoxColor(boxColorArray[i], i);
-                    box.setAttribute("animation", "flip-out");
+                    box.setAttribute("data-animation", "flip-out");
                     box.addEventListener("animationend", () => {
-                        box.setAttribute("animation", "");
+                        box.setAttribute("data-animation", "");
                         doneAnimationConfirmation++;
                         if (doneAnimationConfirmation === 5) {
                             // If the word is wrong, remove a guess, if it is correct, end the game.
@@ -232,9 +232,9 @@ function insertLetter(pressedKey) {
     let box = row.children[boxIndex].firstElementChild;
     box.textContent = pressedKey;
     box.classList.add("filled-box");
-    box.setAttribute("animation", "pop");
+    box.setAttribute("data-animation", "pop");
     box.addEventListener("animationend", () => {
-        box.setAttribute("animation", "");
+        box.setAttribute("data-animation", "");
     });
     currentGuessArray.push(pressedKey);
     boxIndex += 1;
@@ -259,11 +259,11 @@ function deleteLetter() {
 function addBoxColor(color, position) {
     let row = document.getElementsByClassName("gameboard-row")[rowIndex];
     let box = row.children[position].firstElementChild;
-    let oldColor = box.getAttribute("box-color");
+    let oldColor = box.getAttribute("data-box-color");
     if (oldColor === "green") {
         return;
     } else {
-        box.setAttribute("box-color", color);
+        box.setAttribute("data-box-color", color);
     }
 }
 
@@ -271,11 +271,11 @@ function addBoxColor(color, position) {
 function shadeKeyboard (color, letter) {
     for (const element of document.getElementsByClassName("keyboard-button")) {
         if (element.textContent === letter) { 
-            let oldColor = element.getAttribute("keyboard-color");
+            let oldColor = element.getAttribute("data-keyboard-color");
             if (oldColor === "green") {
                 return;
             } else {
-                element.setAttribute("keyboard-color", color);
+                element.setAttribute("data-keyboard-color", color);
             }
         }
     }

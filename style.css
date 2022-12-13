@@ -106,25 +106,25 @@ header {
   border: 2px solid #878a8c;
 }
 
-.gameboard-box[box-color="grey"] {
+.gameboard-box[data-box-color="grey"] {
   background-color: #787c7e;
   border: 2px solid #787c7e;
   color: white;
 }
 
-.gameboard-box[box-color="yellow"] {
+.gameboard-box[data-box-color="yellow"] {
   background-color: #c9b458;
   border: 2px solid #c9b458;
   color: white;
 }
 
-.gameboard-box[box-color="green"] {
+.gameboard-box[data-box-color="green"] {
   background-color: #6aaa64;
   border: 2px solid #6aaa64;
   color: white;
 }
 
-.gameboard-box[animation="pop"] {
+.gameboard-box[data-animation="pop"] {
   animation-name: gameboard-box-pop;
   animation-duration: 100ms;
 }
@@ -140,7 +140,7 @@ header {
   }
 }
 
-.gameboard-box[animation="flip-in"] {
+.gameboard-box[data-animation="flip-in"] {
   animation-name: gameboard-box-flip-in;
   animation-duration: 250ms;
   animation-timing-function: ease-in;
@@ -155,7 +155,7 @@ header {
   }
 }
   
-.gameboard-box[animation="flip-out"] {
+.gameboard-box[data-animation="flip-out"] {
   animation-name: gameboard-box-flip-out;
   animation-duration: 250ms;
   animation-timing-function: ease-in;
@@ -242,17 +242,17 @@ header {
   font-size: 12px;
 }
 
-.keyboard-button[keyboard-color="green"] {
+.keyboard-button[data-keyboard-color="green"] {
   background-color: #6aaa64;
   color: white;
 }
 
-.keyboard-button[keyboard-color="yellow"] {
+.keyboard-button[data-keyboard-color="yellow"] {
   background-color: #c9b458;
   color: white;
 }
 
-.keyboard-button[keyboard-color="grey"] {
+.keyboard-button[data-keyboard-color="grey"] {
   background-color: #787c7e;
   color: white;
 }
