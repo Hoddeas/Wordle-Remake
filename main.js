@@ -95,8 +95,7 @@ keyboard.addEventListener("click", (inputKey) => {
     } else {
         insertLetter(clickedKey);
     }
-
-})
+});
 
 // Function to check the guess
 function checkGuess() {
