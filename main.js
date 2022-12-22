@@ -17,9 +17,7 @@ let numberOfGuesses = 6;
 let guessesRemaining = numberOfGuesses;
 let currentGuessArray = [];
 let correctWordString = targetWords[Math.floor(Math.random() * targetWords.length)];
-
 console.log(correctWordString);
-console.log(document.getElementsByClassName("gameboard-box"))
 
 // Gameboard Global Variables
 let rowIndex = 0;
